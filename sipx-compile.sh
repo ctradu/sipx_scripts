@@ -12,6 +12,8 @@ MY_GROUP=`id -g -n $USER`;
 echo "Install dir: ... $INSTALL_DIR";
 echo "Build   dir: ... $BLD_DIR";
 echo "Sources dir: ... $SRC_DIR";
+echo "SipX user    ... $MY_USER";
+echo "SipX group   ... $MY_GROUP";
 
 
 do_reconf(){
@@ -22,13 +24,13 @@ do_reconf(){
 
 do_configure(){
     cd $BLD_DIR;
-    CONFIG_CMD="$SRC_DIR/configure --cache-file=`pwd`/ac-cache-file SIPXPBXUSER=sipx SIPXPBXGROUP=sipx \
+    CONFIG_CMD="$SRC_DIR/configure --cache-file=`pwd`/ac-cache-file SIPXPBXUSER=$MY_USER SIPXPBXGROUP=$MY_GROUP \
          --prefix=$INSTALL_DIR JAVAC_DEBUG=on JAVAC_OPTIMIZED=off \
          --enable-rpm \
          UPSTREAM_URL=http://download.sipfoundry.org/pub/14.10-unstable/  MIRROR_SITE=http://download.sipfoundry.org/pub PACKAGE_REVISION=stable";
     
-    CONFIG_CMD_NORPM="$SRC_DIR/configure --cache-file=`pwd`/ac-cache-file SIPXPBXUSER=sipx SIPXPBXGROUP=sipx\
-         --prefix=$INSTALL_DIR JAVAC_DEBUG=on JAVAC_OPTIMIZED=off DISTRO=fedora-20-x86_64"
+    CONFIG_CMD_NORPM="$SRC_DIR/configure --cache-file=`pwd`/ac-cache-file SIPXPBXUSER=$MY_USER SIPXPBXGROUP=$MY_GROUP \
+         --prefix=$INSTALL_DIR JAVAC_DEBUG=on JAVAC_OPTIMIZED=off"
 
     read -p "Activate rpms (y/n) ?" yn;
     case $yn in 
@@ -72,6 +74,7 @@ do_patch_reach_stuff() {
     echo;
     echo "Copy js stuff for reach (package.json, Gruntfile.js) to the build dir";
     echo;
+    mkdir -p $BLD_DIR/reach-app/apps/reach_ouc/;
     cp $SRC_DIR/reach-app/apps/reach_ouc/package.json $BLD_DIR/reach-app/apps/reach_ouc/;
     cp $SRC_DIR/reach-app/apps/reach_ouc/Gruntfile.js $BLD_DIR/reach-app/apps/reach_ouc/;
     cp -r $SRC_DIR/reach-app/apps/reach_ouc/site/     $BLD_DIR/reach-app/apps/reach_ouc/;
